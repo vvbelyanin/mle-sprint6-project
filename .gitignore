@@ -1,0 +1,8 @@
+/.env
+/.venv_sprint_6
+/__pycache__
+/arc
+/catboost_info
+/data
+/mlruns
+/models
