@@ -1,12 +1,20 @@
 README.md
 
-**Инструкция по поднятию MLflow-сервисов и регистрации модели в MLflow Tracking Server:**    
+**Проект. Рекомендательные системы в банковской сфере**  
+**Технические инструкции по выполнению проекта**    
+
+Среда:  
+Ubuntu 22.04.3 LTS  
+Python 3.10.12  
+VS Code: 1.93.0
 
 В командной строке:    
 ```
-
 # обновление установленных пакетов
 sudo apt-get update    
+
+python3 -m pip install --upgrade pip
+
 
 # установка пакета виртуального окружения Python
 sudo apt-get install python3.10-venv    
@@ -21,73 +29,81 @@ source .venv_sprint_6/bin/activate
 pip install -r requirements.txt    
 
 # в текущей папке должен быть файл .env со следующими кредами
-DB_DESTINATION_*, S3_*, AWS_*,
-MLFLOW_S3_ENDPOINT_URL, TRACKING_SERVER_CONN
+DB_DESTINATION_*=
+S3_*=
+AWS_*=
+MLFLOW_S3_ENDPOINT_URL=
+TRACKING_SERVER_CONN=
+DATA_DIR=data/
+MODEL_DIR=models/
+DATA_PARQUET=data.parquet
+DATA_CSV=data.csv
+TRAIN_PARQUET=df_train.parquet
+TEST_PARQUET=df_test.parquet
+MODEL_PKL=model.pkl
+FITTED_MODEL=fitted_model.pkl
+MODEL_PARAMS=model_params.json
 
-DATA_PARQUET=data/data.parquet
-DATA_CSV=data/data.csv
-TRAIN_PARQUET=data/df_train.parquet
-TEST_PARQUET=data/df_test.parquet
-MODEL_PKL=models/model.pkl
-FITTED_MODEL=models/fitted_model.pkl
-MODEL_PARAMS=models/model_params.json
-
-
-# запуск сервера MLFlow
-sh run_server.sh
-
-# запуск кода загрузки данных и логирования в MLFlow
-``` 
-    
-Параметры:    
-    
-S3 Bucket name: `s3-student-mle-20240325-4062b25c06`    
-VS Code: 1.93.0
-
-
-#!/bin/bash
-
-# chmod +x run.sh
-# ./run.sh
-
-python3 -m pip install --upgrade pip
-pip install wldhx.yadisk-direct
+# данные есть по прямой по ссылке
+# если нет, установить unzip
 sudo apt install unzip
 
+# создать каталог и перейти туда
 mkdir data && cd data
 
+# скачать файл
 curl -L $(yadisk-direct https://disk.yandex.com/d/Io0siOESo2RAaA) -o data.zip
-or
+
+# или
 wget -O data.zip $(yadisk-direct https://disk.yandex.com/d/Io0siOESo2RAaA)
 
+#  и разархивировать
 unzip -p data.zip train_ver2.csv > data.csv
 
+# вернуться в катоалог проекта
 cd ..
 
+# запуска сервера MLFlow по скрипту
+sh run_server.sh
+   
+# проверка FastAPI (sample.json - файл с данными запроса)
 curl -X POST "http://127.0.0.1:8000/predict" \
      -H "Content-Type: application/json" \
      -d @sample.json
 
-
+# загрузка grafana / graphite вручную
 docker pull grafana/grafana
 docker pull graphiteapp/graphite-statsd
 
+# сборка образов и старт контейнеров
 docker compose up --build
 
-
-# check:
+# проверка запуска контейнеров:
 docker ps
-docker logs fastapi_app
 
+# диагностика запуска контейнеров (<service> - название сервиса ):
+docker logs <service>
 
+# проверка доступности портов
 sudo lsof -i :8000
 
+# запуск имитиации нагрузки на сервис
 python run_mimic_load.py
 
+# при необходимости: 
+# удаление неиспользуемых образов
+docker image prune -a
 
-
-Remove unused images: docker image prune -a
+# удаление остановленных контейнеров
 Remove stopped containers: docker container prune
+
+# удаление неиспользуемых томов
 Remove unused volumes: docker volume prune
-Remove build cache: docker builder prune
-Full cleanup: docker system prune -a --volumes
+
+# удаление ненужных кешей
+docker builder prune
+
+# полная очистка всех неипользуемых ресурсов
+docker system prune -a --volumes
+
+``` 
