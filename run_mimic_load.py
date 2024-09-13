@@ -17,7 +17,7 @@ import random
 import requests
 
 # Total number of requests to be sent during the load test
-NUM_REQUESTS = 1000
+NUM_REQUESTS = 10000
 
 for i in range(NUM_REQUESTS):
     """
@@ -28,7 +28,7 @@ for i in range(NUM_REQUESTS):
     duration between requests to simulate load.
     """
     print(f'\rRequest: {i+1} of {NUM_REQUESTS}', end='', flush=True)
-    requests.get('http://localhost:8000/random', timeout=10)
-    time.sleep(random.random())
-    requests.get('http://localhost:8000/metrics', timeout=10)
-    time.sleep(random.random())
+    requests.get('http://localhost:8000/random', timeout=(5, 5))
+    time.sleep(random.random()*0.1)
+    requests.get('http://localhost:8000/', timeout=(5, 5))
+    time.sleep(random.random()*0.1)

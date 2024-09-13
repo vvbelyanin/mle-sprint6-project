@@ -16,3 +16,4 @@ boto3==1.35.15
 uvicorn==0.30.6
 fastapi==0.114.1
 psycopg2-binary==2.9.9
+statsd==4.0.1

@@ -1,8 +1,17 @@
-/.env
-/.venv_sprint_6
-/__pycache__
-/arc
-/catboost_info
-/data
-/mlruns
-/models
+# Environment and configuration files
+.env
+.venv_sprint_6/
+
+# Python-related files and directories
+__pycache__/
+
+# Temporary and log files
+catboost_info/
+
+# Data and experiment tracking directories
+data/
+mlruns/
+grafana/grafana.db
+
+# Model files
+models/

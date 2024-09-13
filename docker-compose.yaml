@@ -1,0 +1,58 @@
+version: '3.8'  # Specifies the version of Docker Compose
+
+services:
+  fastapi:
+    build: .  # Build FastAPI service from the current directory (Dockerfile required)
+    container_name: fastapi_app  # Name of the FastAPI container
+    ports:
+      - "8000:8000"  # Expose FastAPI on port 8000 (host:container)
+    depends_on:  # FastAPI depends on mlflow and graphite to start first
+      - mlflow
+      - graphite
+    env_file:
+      - .env
+
+  mlflow:
+    build: .  # Build MLflow service from the current directory (using Dockerfile for FastAPI)
+    command:
+      - mlflow
+      - server
+      - --backend-store-uri=postgresql://${DB_DESTINATION_USER}:${DB_DESTINATION_PASSWORD}@${DB_DESTINATION_HOST}:${DB_DESTINATION_PORT}/${DB_DESTINATION_NAME}
+      - --registry-store-uri=postgresql://${DB_DESTINATION_USER}:${DB_DESTINATION_PASSWORD}@${DB_DESTINATION_HOST}:${DB_DESTINATION_PORT}/${DB_DESTINATION_NAME}
+      - --default-artifact-root=s3://${S3_BUCKET_NAME}
+      - --host=0.0.0.0
+      - --no-serve-artifacts
+    ports:
+      - "5000:5000"  # Expose MLflow server on port 5000 (host:container)
+    environment:
+      - DB_DESTINATION_USER=${DB_DESTINATION_USER}  # Database user from .env
+      - DB_DESTINATION_PASSWORD=${DB_DESTINATION_PASSWORD}  # Database password from .env
+      - DB_DESTINATION_HOST=${DB_DESTINATION_HOST}  # Database host from .env
+      - DB_DESTINATION_PORT=${DB_DESTINATION_PORT}  # Database port from .env
+      - DB_DESTINATION_NAME=${DB_DESTINATION_NAME}  # Database name from .env
+    depends_on:  # MLflow service requires Graphite to start first
+      - graphite
+    volumes:
+      - ./mlruns:/mlflow/artifacts  # Mount local directory to store MLflow artifacts
+
+  grafana:
+    image: grafana/grafana  # Use the official Grafana image
+    container_name: grafana  # Name of the Grafana container
+    ports:
+      - "3000:3000"  # Expose Grafana on port 3000 (host:container)
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER} # Grafana admin username
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASS} # Grafana admin password
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning  # Mount provisioning files for Grafana
+    depends_on:  # Grafana requires Graphite to start first
+      - graphite
+
+  graphite:
+    image: graphiteapp/graphite-statsd  # Use the official Graphite image with StatsD
+    container_name: graphite  # Name of the Graphite container
+    ports:
+      - "80:80"               # Expose Graphite web interface on port 80 (host:container)
+      - "2003:2003"            # Expose Carbon port (used for receiving metrics) on port 2003
+      - "8125:8125/udp"        # Expose StatsD UDP port on 8125 (for receiving metrics)
+      - "8126:8126"            # Expose StatsD admin interface on port 8126 (host:container)

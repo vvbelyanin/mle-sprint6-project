@@ -1,0 +1,19 @@
+# Ignore all temporary or auto-generated files
+.ipynb           # Jupyter Notebook files
+__pycache__/     # Python cache directories
+catboost_info/   # CatBoost logs and temporary files
+arc/             # Archived or backup files
+
+# Ignore version control and environment-related files
+.git/            # Git metadata
+.gitignore       # The .gitignore file itself
+.venv_sprint_6/  # Specific virtual environment directory
+
+# Ignore documentation and notes
+.md              # Markdown files
+
+# Ignore data and experiment tracking directories
+data/            # Data directories
+mlruns/          # MLflow experiment tracking directory
+services/
+app_old/

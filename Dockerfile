@@ -1,17 +1,19 @@
-# Use the official Python 3.10 slim image as the base image
 FROM python:3.10-slim
 
-# Copy the contents of the current directory to the /services directory in the container
-COPY . /services
+# Set the working directory
+WORKDIR /
 
-# Install the Python dependencies listed in the requirements.txt file
-RUN pip3 install -r services/requirements.txt
+# Copy requirements and install dependencies
+COPY ./requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Expose port 8000 to allow external access to the application
+# Copy application files and the model
+COPY app.py /app.py
+COPY data_utils.py /data_utils.py
+COPY models /models
+
+# Expose the port
 EXPOSE 8000
 
-# Set the entry point to run a shell command
-ENTRYPOINT ["sh", "-c"]
-
-# Define the default command to run the Uvicorn server with the application module specified by the APP_MODULE environment variable
-CMD ["uvicorn ${APP_MODULE} --host 0.0.0.0 --port 8000"]
+# Run the FastAPI app with Uvicorn
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

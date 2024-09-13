@@ -1,102 +1,119 @@
-
 import uvicorn
 import os
 import joblib
 import json
-
-from fastapi import FastAPI, Request
-import pandas as pd
-
-from data_utils import get_mem_usage, new_columns, attrs
-from data_utils import upload_to_s3, download_from_s3, show_s3_folder
-from data_utils import DataFrameProcessor, frequency_encoding, get_X_y
-
-from dotenv import load_dotenv
-import numpy as np
+import psutil
 from fastapi import FastAPI, Body
+import pandas as pd
+from data_utils import get_mem_usage, new_columns, attrs
+from data_utils import DataFrameProcessor, frequency_encoding, get_X_y
+from data_utils import gen_random_data
+from dotenv import load_dotenv
 from typing import Dict
+import time
 
-# Load environment variables from the .env file
+from statsd import StatsClient
+
 load_dotenv()
 
-env_var_names = [
-    'UVICORN_HOST', 'UVICORN_PORT', 'BASE_URL',
-    'LOCAL_MODEL_PATH', 'FITTED_MODEL', 'MODEL_PARAMS'
-]
-
-for var in env_var_names:
-    globals()[var] = os.getenv(var)
-
-
-model = joblib.load(LOCAL_MODEL_PATH + FITTED_MODEL)
-
-with open(LOCAL_MODEL_PATH + MODEL_PARAMS, 'r') as f:
-    json_data = json.load(f)
-    target_names = json_data['target_names']
-    income_mean = json_data['income_mean']
-
-def load_row_from_json_old(json_file):
-    row_loaded = pd.read_json(json_file, typ='series')
-    
-
-    row_loaded['fetch_date'] = pd.to_datetime(row_loaded['fetch_date'], format='%d-%m-%Y')
-    row_loaded['registration_date'] = pd.to_datetime(row_loaded['registration_date'], format='%d-%m-%Y')
-    row_loaded['last_date_as_primary'] = pd.to_datetime(row_loaded['last_date_as_primary'], format='%d-%m-%Y')
-
-    if row_loaded['income'] is None:
-        row_loaded['income'] = income_mean
-
-    return pd.DataFrame([row_loaded])
+DATA_DIR = os.getenv('DATA_DIR')
+MODEL_DIR = os.getenv('MODEL_DIR')
+FITTED_MODEL = os.getenv('FITTED_MODEL')
+MODEL_PARAMS = os.getenv('MODEL_PARAMS')
 
 
 def load_row_from_json(json_data):
-    # Convert the JSON dictionary into a Pandas Series
     row_loaded = pd.Series(json_data)
 
-    # Convert specific fields to datetime
     row_loaded['fetch_date'] = pd.to_datetime(row_loaded['fetch_date'], format='%d-%m-%Y', errors='coerce')
     row_loaded['registration_date'] = pd.to_datetime(row_loaded['registration_date'], format='%d-%m-%Y', errors='coerce')
     row_loaded['last_date_as_primary'] = pd.to_datetime(row_loaded['last_date_as_primary'], format='%d-%m-%Y', errors='coerce')
 
-    # Handle missing 'income' field by filling with the mean value if missing
     if pd.isna(row_loaded['income']):
         row_loaded['income'] = income_mean
 
-    # Return a DataFrame with one row for further processing
     return pd.DataFrame([row_loaded])
 
-def interpret_predictions(predictions):
+def interpret_predictions(predictions, lang='rus'):
+    if lang == 'rus':
+        targets = target_names
+    else:
+        targets = target_names_eng
     res = {}
-    for col, name in zip(predictions, target_names):
+    for col, name in zip(predictions, targets):
         res[name] = int(col)
     return res
 
+def refresh_metrics(st):
+    global last_time, service_start
+    st.incr('bank-rs.requests')
+    
+    if time.time() - last_time > time_delta:
+        cpu_load = psutil.cpu_percent(interval=1)
+        st.gauge('bank-rs.system.cpu_load', cpu_load)
+        memory_info = psutil.virtual_memory().available / 1024 / 1024  # in MB
+        st.gauge('bank-rs.system.memory_free_mb', memory_info)
+        last_time = time.time()
+    
+    st.gauge('bank-rs.system.up_time', time.time() - service_start)
+    st.incr("response_code.200")
+
+
+count_requests = 0
+service_start = time.time()
+
+last_time = time.time()
+time_delta = 10
+
+model = joblib.load(MODEL_DIR + FITTED_MODEL)
+
+with open(MODEL_DIR + MODEL_PARAMS, 'r') as f:
+    json_data = json.load(f)
+    target_names = json_data['target_names']
+    target_names_eng = json_data['target_names_eng']
+    income_mean = json_data['income_mean']
+
 app = FastAPI(title="Bank RS")
+
+stats_client = StatsClient(host="graphite", port=8125, prefix="bank-rs")
 
 @app.get("/")
 async def read_root() -> dict:
+    refresh_metrics(stats_client)
     return {"status": "Alive"}
+
+@app.get("/random")
+async def get_random() -> dict:
+    start_time = time.time()
+    row = load_row_from_json(gen_random_data())
+    predictions = model.predict(row)[0]
+
+    response_time = time.time() - start_time
+    stats_client.timing("response_time", response_time)
+
+    predictions_dict = interpret_predictions(predictions, lang='eng')
+    for target, prediction in predictions_dict.items():
+        if prediction==1:
+            stats_client.incr("target." + target)
+    
+    refresh_metrics(stats_client)
+    return interpret_predictions(predictions)
+
 
 @app.post("/predict")
 async def predict(data: Dict = Body(...)): 
+    start_time = time.time()
+
     row = load_row_from_json(data)
-    prediction = model.predict(row)[0]
-    return interpret_predictions(prediction)
+    predictions = model.predict(row)[0]
+    response_time = time.time() - start_time
 
+    stats_client.timing("response_time", response_time)
 
-def main():
-    try:
-        uvicorn.run(
-            app,
-            host=UVICORN_HOST,
-            port=int(UVICORN_PORT),
-            log_level="info"
-        )
-    except KeyboardInterrupt:
-        print("Process terminated by user (Ctrl+C).")
-
-
-if __name__ == "__main__":
-    main()
-
-
+    predictions_dict = interpret_predictions(predictions, lang='eng')
+    for target, prediction in predictions_dict.items():
+        if prediction==1:
+            stats_client.incr("target." + target)
+    
+    refresh_metrics(stats_client)
+    return interpret_predictions(predictions)
