@@ -1,21 +1,22 @@
 # Standard library imports
-import os
-import json
-import time
+import os  # For environment variables
+import json  # For parsing JSON files
+import time  # For time tracking and delays
+import numpy as np  # For array operations
 
 # Third-party library imports
-import uvicorn
-import joblib
-import psutil
-import pandas as pd
-from fastapi import FastAPI, Body
-from dotenv import load_dotenv
-from typing import Dict
-from statsd import StatsClient
+import uvicorn  # ASGI server for running FastAPI
+import joblib  # For loading machine learning models
+import psutil  # For accessing system utilization metrics
+import pandas as pd  # For data manipulation and analysis
+from fastapi import FastAPI, Body  # FastAPI components for building API
+from dotenv import load_dotenv  # For loading environment variables from .env
+from typing import Dict  # Type hinting for dictionaries
+from statsd import StatsClient  # For sending metrics to StatsD
 
 # Local project imports
 from data_utils import (get_mem_usage, new_columns, attrs, DataFrameProcessor, 
-                        frequency_encoding, get_X_y, gen_random_data)
+                        frequency_encoding, get_X_y, gen_random_data)  # Custom utilities for data processing
 
 
 # Load environment variables from .env file
@@ -27,9 +28,16 @@ MODEL_DIR = os.getenv('MODEL_DIR')
 FITTED_MODEL = os.getenv('FITTED_MODEL')
 MODEL_PARAMS = os.getenv('MODEL_PARAMS')
 
-def load_row_from_json(json_data):
+
+def load_row_from_json(json_data: Dict) -> pd.DataFrame:
     """
     Convert JSON data to a Pandas Series, handle date parsing, and return as a DataFrame.
+    
+    Args:
+        json_data (Dict): JSON data received from the request.
+    
+    Returns:
+        pd.DataFrame: DataFrame with a single row of parsed data.
     """
     row_loaded = pd.Series(json_data)
 
@@ -45,9 +53,18 @@ def load_row_from_json(json_data):
     # Convert Series to DataFrame for model prediction compatibility
     return pd.DataFrame([row_loaded])
 
-def interpret_predictions(predictions, lang='rus'):
+
+def interpret_predictions(predictions: np.ndarray, lang: str = 'rus', is_integer: bool = True) -> Dict[str, float]:
     """
     Map numeric predictions to target names in the specified language.
+    
+    Args:
+        predictions (np.ndarray): Array of prediction values.
+        lang (str): Language for target names, either 'rus' or 'eng'.
+        is_integer (bool): Flag indicating whether to convert predictions to integers.
+    
+    Returns:
+        Dict[str, float]: Dictionary mapping target names to their predicted values.
     """
     if lang == 'rus':
         targets = target_names
@@ -56,13 +73,23 @@ def interpret_predictions(predictions, lang='rus'):
     
     # Construct a dictionary mapping target names to prediction values
     res = {}
+    print(predictions, '*' * 30)
     for col, name in zip(predictions, targets):
-        res[name] = int(col)
+        print(col, type(col), col.size)
+        if is_integer:
+            res[name] = int(col)  # Convert to int if needed
+        else:
+            res[name] = float(col)  # Convert to float if needed
+
     return res
 
-def refresh_metrics(st):
+
+def refresh_metrics(st: StatsClient) -> None:
     """
     Update and send system metrics (CPU, memory usage, uptime) and request counts to StatsD.
+    
+    Args:
+        st (StatsClient): StatsD client instance for sending metrics.
     """
     global last_time, service_start
 
@@ -103,18 +130,26 @@ app = FastAPI(title="Bank RS")
 # Initialize StatsD client for sending metrics
 stats_client = StatsClient(host="graphite", port=8125, prefix="bank-rs")
 
+
 @app.get("/")
 async def read_root() -> dict:
     """
     Root endpoint that returns the service status and refreshes system metrics.
+    
+    Returns:
+        dict: Status message.
     """
     refresh_metrics(stats_client)
     return {"status": "Alive"}
+
 
 @app.get("/random")
 async def get_random() -> dict:
     """
     Generate random data, make predictions, and send metrics to StatsD.
+    
+    Returns:
+        dict: Predicted values based on random data.
     """
     start_time = time.time()  # Track request start time
 
@@ -138,10 +173,17 @@ async def get_random() -> dict:
     # Return predictions as a dictionary
     return interpret_predictions(predictions)
 
+
 @app.post("/predict")
-async def predict(data: Dict = Body(...)):
+async def predict(data: Dict = Body(...)) -> dict:
     """
     Predict based on provided input data and send metrics to StatsD.
+    
+    Args:
+        data (Dict): Input data as JSON.
+    
+    Returns:
+        dict: Predicted values.
     """
     start_time = time.time()  # Track request start time
 
@@ -164,3 +206,25 @@ async def predict(data: Dict = Body(...)):
 
     # Return predictions as a dictionary
     return interpret_predictions(predictions)
+
+
+@app.post("/predict_proba")
+async def predict_proba(data: Dict = Body(...)) -> dict:
+    """
+    Makes recommendations based on probabilities, does not generate metrics.
+    
+    Args:
+        data (Dict): Input data as JSON.
+    
+    Returns:
+        dict: Sorted predictions with probabilities above the threshold.
+    """
+    row = load_row_from_json(data)
+    predictions = model.predict_proba(row)
+
+    threshold = 0.01
+    interpreted_predictions = interpret_predictions([pos_class[1] for prediction in predictions for pos_class in prediction], is_integer=False)
+    filtered_dict = {k: round(v, 4) for k, v in interpreted_predictions.items() if v >= threshold}
+    sorted_dict = dict(sorted(filtered_dict.items(), key=lambda item: -item[1]))
+
+    return sorted_dict

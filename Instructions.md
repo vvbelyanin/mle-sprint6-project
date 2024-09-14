@@ -66,14 +66,15 @@ cd ..
 # запуска сервера MLFlow по скрипту
 sh run_server.sh
    
-# проверка FastAPI (sample.json - файл с данными запроса)
+# проверка FastAPI, endpoint "/predict", sample.json - файл с данными запроса
 curl -X POST "http://127.0.0.1:8000/predict" \
      -H "Content-Type: application/json" \
      -d @sample.json
 
-# загрузка grafana / graphite вручную
-docker pull grafana/grafana
-docker pull graphiteapp/graphite-statsd
+# проверка FastAPI, endpoint "/predict_proba"
+curl -X POST "http://127.0.0.1:8000/predict_proba" \
+     -H "Content-Type: application/json" \
+     -d @sample.json
 
 # сборка образов и старт контейнеров
 docker compose up --build
@@ -83,6 +84,8 @@ docker compose up --build
 # MLFlow: http://127.0.0.1:5000 
 # Graphit: http://127.0.0.1:80 
 # Grafana: http://127.0.0.1:3000 
+
+# В Grafana по умолчанию USER=admin, PASSWORD=grafana
 # В Grafana нужно выбрать Menu - Dashboards - bank-rs
 
 # в другом терминале:
@@ -99,8 +102,6 @@ sudo lsof -i :8000
 python run_mimic_load.py
 
 
-
-
 # завершение работы сервисов по Ctrl-C в терминале, где был запущен контейнер
 
 # при необходимости: 
@@ -108,10 +109,10 @@ python run_mimic_load.py
 docker image prune -a
 
 # удаление остановленных контейнеров
-Remove stopped containers: docker container prune
+docker container prune
 
 # удаление неиспользуемых томов
-Remove unused volumes: docker volume prune
+docker volume prune
 
 # удаление ненужных кешей
 docker builder prune
