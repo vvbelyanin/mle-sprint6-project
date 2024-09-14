@@ -78,6 +78,13 @@ docker pull graphiteapp/graphite-statsd
 # сборка образов и старт контейнеров
 docker compose up --build
 
+# интерфейсы сервисов
+# FastAPI: http://127.0.0.1:8000 
+# MLFlow: http://127.0.0.1:5000 
+# Graphit: http://127.0.0.1:80 
+# Grafana: http://127.0.0.1:3000 
+# В Grafana нужно выбрать Menu - Dashboards - bank-rs
+
 # в другом терминале:
 # проверка запуска контейнеров:
 docker ps
@@ -90,6 +97,9 @@ sudo lsof -i :8000
 
 # запуск имитиации нагрузки на сервис
 python run_mimic_load.py
+
+
+
 
 # завершение работы сервисов по Ctrl-C в терминале, где был запущен контейнер
 
