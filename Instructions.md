@@ -60,7 +60,7 @@ wget -O data.zip $(yadisk-direct https://disk.yandex.com/d/Io0siOESo2RAaA)
 #  и разархивировать
 unzip -p data.zip train_ver2.csv > data.csv
 
-# вернуться в катоалог проекта
+# вернуться в каталог проекта
 cd ..
 
 # запуска сервера MLFlow по скрипту
