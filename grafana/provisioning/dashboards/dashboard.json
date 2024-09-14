@@ -50,8 +50,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 20,
-        "w": 13,
+        "h": 21,
+        "w": 14,
         "x": 0,
         "y": 0
       },
@@ -118,8 +118,8 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
+            "lineWidth": 3,
+            "pointSize": 8,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -138,7 +138,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "purple",
                 "value": null
               },
               {
@@ -193,7 +193,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "purple",
+            "mode": "fixed"
           },
           "custom": {
             "axisBorderShow": false,
@@ -204,7 +205,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 6,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -213,19 +214,22 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
-            "pointSize": 5,
+            "pointSize": 7,
             "scaleDistribution": {
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "line"
             }
           },
           "mappings": [],
@@ -233,12 +237,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "purple",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -275,7 +275,7 @@
           "target": "movingAverage(stats.bank-rs.response_code.200, '10min')"
         }
       ],
-      "title": "Panel Title",
+      "title": "Динамика успешных (200) запросов",
       "type": "timeseries"
     },
     {
@@ -564,6 +564,6 @@
   "timezone": "browser",
   "title": "bank-rs",
   "uid": "cdxolwykmxurke",
-  "version": 5,
+  "version": 2,
   "weekStart": ""
 }
