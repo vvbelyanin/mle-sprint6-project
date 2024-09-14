@@ -12,6 +12,3 @@ catboost_info/
 data/
 mlruns/
 grafana/grafana.db
-
-# Model files
-models/
