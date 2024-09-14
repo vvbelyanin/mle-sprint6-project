@@ -1,5 +1,3 @@
-version: '3.8'  # Specifies the version of Docker Compose
-
 services:
   fastapi:
     build: .  # Build FastAPI service from the current directory (Dockerfile required)
