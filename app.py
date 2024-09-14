@@ -73,9 +73,7 @@ def interpret_predictions(predictions: np.ndarray, lang: str = 'rus', is_integer
     
     # Construct a dictionary mapping target names to prediction values
     res = {}
-    print(predictions, '*' * 30)
     for col, name in zip(predictions, targets):
-        print(col, type(col), col.size)
         if is_integer:
             res[name] = int(col)  # Convert to int if needed
         else:
