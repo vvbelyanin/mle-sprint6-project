@@ -15,5 +15,3 @@ arc/             # Archived or backup files
 # Ignore data and experiment tracking directories
 data/            # Data directories
 mlruns/          # MLflow experiment tracking directory
-services/
-app_old/
