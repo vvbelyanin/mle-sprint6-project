@@ -290,7 +290,8 @@ def upload_to_s3(file_name: str, object_name: str = None) -> bool:
 
     Args:
         file_name (str): The local file path to upload.
-        object_name (str, optional): The object name in the S3 bucket. Defaults to file_name if not provided.
+        object_name (str, optional): The object name in the S3 bucket. 
+            Defaults to file_name if not provided.
 
     Returns:
         bool: True if upload was successful, False otherwise.
@@ -443,6 +444,8 @@ attrs = {
     'ind_1m_securities': ('Ценные бумаги', 'Securities'),
     'ind_1m_home_acc': ('Домашний счёт', 'Home Account'),
     'ind_1m_salary_acc': ('Аккаунт для выплаты зарплаты', 'Salary Account'),
-    'ind_1m_pension_obligation_account': ('Аккаунт для пенсионных обязательств', 'Pension Obligation Account'),
+    'ind_1m_pension_obligation_account': (
+        'Аккаунт для пенсионных обязательств', 'Pension Obligation Account'
+    ),
     'ind_1m_debit_account': ('Дебетовый аккаунт', 'Debit Account')
 }
