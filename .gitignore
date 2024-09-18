@@ -12,3 +12,4 @@ catboost_info/
 data/
 mlruns/
 grafana/grafana.db
+airflow/logs/

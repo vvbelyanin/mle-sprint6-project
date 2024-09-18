@@ -120,4 +120,19 @@ docker builder prune
 # полная очистка всех неипользуемых ресурсов
 docker system prune -a --volumes
 
+
+
+
+
+
+
+#pip install apache-airflow-providers-amazon
+
+cd airflow
+#docker build -t airflow-standalone .
+docker build -t airflow-standalone -f Dockerfile ../
+
+docker run -it --env-file ../.env -p ${AIRFLOW_PORT}:${AIRFLOW_PORT} airflow-standalone
+
+
 ``` 

@@ -17,3 +17,5 @@ uvicorn==0.30.6
 fastapi==0.114.1
 psycopg2-binary==2.9.9
 statsd==4.0.1
+apache-airflow-providers-amazon==8.28.0
+apache-airflow-providers-openlineage>=1.8.0

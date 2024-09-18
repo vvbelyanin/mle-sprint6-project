@@ -14,7 +14,13 @@ import boto3
 from botocore.exceptions import ClientError, PartialCredentialsError
 from catboost import CatBoostClassifier
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer
 
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.pipeline import Pipeline
+
+RANDOM_STATE = 42
 
 def gen_random_data(output: str = 'json') -> Dict[str, Any]:
     """
@@ -95,6 +101,23 @@ def gen_random_data(output: str = 'json') -> Dict[str, Any]:
         return data_df.to_dict(orient='index')[0]  # Return first (and only) row as dict
 
     return data_df
+
+
+def process_na(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Process the dataframe by removing rows with too many NaN values and those marked as deceased.
+
+    Parameters:
+    df (pd.DataFrame): The input dataframe to process.
+
+    Returns:
+    pd.DataFrame: The cleaned dataframe with fewer NaN values and no deceased individuals.
+    """
+    # Keep rows where fewer than 10 NaN values exist and where 'ind_deceased' is 'N'
+    df = df[df.isna().sum(axis=1) < 10]
+    df = df[df['ind_deceased'] == 'N']
+    
+    return df
 
 
 def process_df(df: pd.DataFrame) -> pd.DataFrame:
@@ -314,6 +337,30 @@ def upload_to_s3(file_name: str, object_name: str = None) -> bool:
     except Exception as e:
         print(f"General Error: An unexpected error occurred: {str(e)}")
     return False
+
+
+numerical_columns = ['age', 'tenure_months', 'income', 'fetch_year', 'fetch_month', 'number_of_products']
+freq_encode_columns = ['entry_channel', 'province_code']
+one_hot_columns = ['gender', 'client_type_1m', 'client_activity_1m', 'ind_foreigner', 'client_segment']
+
+
+column_transformer = ColumnTransformer(
+    transformers=[
+        ('num', MinMaxScaler(), numerical_columns),
+        ('onehot', OneHotEncoder(drop='first'), one_hot_columns),
+        ('freq', FunctionTransformer(frequency_encoding), freq_encode_columns)
+    ], 
+    remainder='passthrough',
+    force_int_remainder_cols=False,
+)
+
+model = Pipeline(steps=[
+    ('preprocessor', DataFrameProcessor()),
+    ('encoder', column_transformer),
+    ('model', MultiOutputClassifier(
+        CatBoostClassifier(iterations=100, verbose=100, class_weights = [1, 4], random_state=RANDOM_STATE)
+    ))
+])
 
 
 new_columns = {
