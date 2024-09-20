@@ -1,3 +1,4 @@
+# airflow/dags/pipeline.py
 """
 Airflow DAG for downloading, processing, and uploading data to S3.
 
@@ -62,7 +63,6 @@ with DAG(
         print(f"{S3_BUCKET_NAME=}")
         print(f"{S3_DIR=}")
         print(f"S3 Key: {path(S3_DIR, DATA_CSV)}")
-        print(f"{tmp_csv=}")
         print(f"AWS_ACCESS_KEY_ID: {os.getenv('AWS_ACCESS_KEY_ID')}")
         print(f"{AWS_CONN_ID=}")
         

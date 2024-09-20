@@ -1,11 +1,10 @@
+# /run_mimic_load.py
 """
-services/app/load_test_script.py
-
 This script performs load testing on a FastAPI application by sending a series of requests
 to specific endpoints.
 
 1. Sends GET requests to the "/random" endpoint.
-2. Sends GET requests to the "/metrics" endpoint.
+2. Sends GET requests to the "/" endpoint.
 3. Introduces random delays between requests to simulate real-world usage patterns.
 
 Key Components:

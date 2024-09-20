@@ -1,33 +1,14 @@
-# Python file: bank_rs_api.py
+# Python file: app.py
 #
 # Content:
-# 1. Imports:
-#    - Standard libraries for file handling, environment variables, time tracking, and array operations.
-#      * os: For environment variable access.
-#      * json: For parsing JSON data.
-#      * time: For time-related operations (tracking and delays).
-#      * numpy: For numerical array operations.
-#    - Third-party libraries for serving the API, model loading, and system monitoring.
-#      * uvicorn: ASGI server for running FastAPI.
-#      * joblib: For loading pre-trained machine learning models.
-#      * psutil: For accessing system utilization metrics (CPU, memory).
-#      * pandas: For data manipulation.
-#      * fastapi: For building the FastAPI app.
-#      * dotenv: For loading environment variables from a .env file.
-#      * typing: For type hinting.
-#      * statsd: For sending metrics to StatsD.
-#    - Local project imports for utility functions and configuration.
-#      * utils.helpers: Helper functions (gen_random_data, load_row_from_json, interpret_predictions).
-#      * utils.config: Constants like MODEL_DIR, FITTED_MODEL, STATSD_UDP_PORT.
-#
-# 2. Constants:
+# Constants:
 #    - REFRESH_PERIOD: Interval for refreshing system metrics.
 #    - PROBA_THRESHOLD: Probability threshold for filtering predictions.
 #
-# 3. Functions:
+# Functions:
 #    - refresh_metrics(st: StatsClient) -> None: Sends system metrics (CPU, memory) and request metrics to StatsD.
 #
-# 4. FastAPI Endpoints:
+# FastAPI Endpoints:
 #    - read_root() -> dict: Root endpoint that returns the status of the service.
 #    - get_random() -> dict: Generates random data, makes predictions, and sends metrics to StatsD.
 #    - predict(data: Dict = Body(...)) -> dict: Accepts user input data for predictions and sends metrics.
@@ -37,10 +18,10 @@
 # It also includes system metric tracking via StatsD, and sends metrics related to CPU usage, memory, and API response times.
 
 # Standard library imports
-import os  # For environment variables
-import json  # For parsing JSON files
-import time  # For time tracking and delays
-import numpy as np  # For array operations
+import os
+import json
+import time
+import numpy as np
 
 # Third-party library imports
 import uvicorn  # ASGI server for running FastAPI

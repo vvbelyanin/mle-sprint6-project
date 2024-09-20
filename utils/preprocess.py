@@ -1,4 +1,4 @@
-# Python file: preprocess.py
+# Python file: utils/preprocess.py
 #
 # Content:
 #
@@ -26,22 +26,33 @@
 # This file defines a data processing pipeline for preparing datasets for multi-output classification models using CatBoost. 
 # It includes custom transformers for feature engineering, scaling, and encoding.
 
-
-# Standard library imports
+# Import standard libraries
 import pandas as pd
 import numpy as np
+
+# Import scikit-learn's base classes and transformers
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer
+from sklearn.compose import ColumnTransformer  # For applying transformations to different columns
+from sklearn.multioutput import MultiOutputClassifier  # For multi-output classification tasks
+from sklearn.pipeline import Pipeline  # To create machine learning pipelines
 
-from sklearn.multioutput import MultiOutputClassifier
-from sklearn.pipeline import Pipeline
-
+# Import typing for type hinting, which improves code readability and helps with IDE auto-completion
 from typing import Optional, Dict, Any
+
+# Import CatBoostClassifier, a gradient boosting library for classification
 from catboost import CatBoostClassifier
+
+# Import configuration variables and settings
 from utils.config import (
-    numerical_columns, freq_encode_columns, one_hot_columns,
-    RANDOM_STATE, NAN_THRESHOLD, CBC_ITERATIONS, CBC_VERBOSE, CBC_CLASS_WEIGHTS
+    numerical_columns,  # List of numerical columns for feature engineering
+    freq_encode_columns,  # Columns that will be frequency-encoded
+    one_hot_columns,  # Columns that will be one-hot encoded
+    RANDOM_STATE,  # Random seed for reproducibility
+    NAN_THRESHOLD,  # Threshold for handling missing values
+    CBC_ITERATIONS,  # Number of iterations for the CatBoost classifier
+    CBC_VERBOSE,  # Verbosity level for CatBoost training output
+    CBC_CLASS_WEIGHTS  # Class weights for handling imbalanced datasets in CatBoost
 )
 
 

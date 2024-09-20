@@ -1,11 +1,12 @@
 #!/bin/bash
-
+#
+# airflow/setup_airflow.sh
+#
 # Initialize the Airflow metadata database
 airflow db migrate
 
 # Create admin user
 airflow users delete --username admin
-
 airflow users create \
     --username admin \
     --firstname Admin \

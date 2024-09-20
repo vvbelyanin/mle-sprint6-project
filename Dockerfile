@@ -1,3 +1,6 @@
+# Dockerfile
+#
+# Use the official image of Python 3.10
 FROM python:3.10-slim
 
 # Set the working directory

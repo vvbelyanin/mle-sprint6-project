@@ -1,34 +1,22 @@
+# airflow/Dockerfile
+#
 # Use the official Apache Airflow base image with Python 3.10
 FROM apache/airflow:2.6.3-python3.10
 
-# Set the Airflow home directory
+# Set the Airflow home directory & PYTHONPATH
 ENV AIRFLOW_HOME=/opt/airflow
-
-# Set PYTHONPATH to include the Airflow home directory (so Python knows where to look for modules)
 ENV PYTHONPATH=/opt/airflow
 
-# Switch to root user to install system-level packages
-USER root
-
 # Update the package list and install essential tools like wget, curl, and unzip
+USER root
 RUN apt-get update && apt-get install -y wget curl unzip
 
-# Switch back to the airflow user (non-root user) for security purposes
+# Copy the needed folders/files into the Airflow home directory
 USER airflow
-
-# Copy the `utils` folder into the Airflow home directory
 COPY ./utils $AIRFLOW_HOME/utils
-
-# Copy the `models` folder into the Airflow home directory
 COPY ./models $AIRFLOW_HOME/models
-
-# Copy the DAGs folder into the Airflow home directory
 COPY ./airflow/dags $AIRFLOW_HOME/dags
-
-# Copy the Airflow setup script into the Airflow home directory
 COPY ./airflow/setup_airflow.sh $AIRFLOW_HOME/setup_airflow.sh
-
-# Copy the Airflow configuration file into the Airflow home directory
 COPY ./airflow/airflow.cfg $AIRFLOW_HOME/airflow.cfg
 
 # Upgrade pip to the latest version

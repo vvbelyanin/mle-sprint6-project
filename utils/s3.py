@@ -1,14 +1,7 @@
-# Python file: s3_utils.py
+# Python file: utils/s3.py
 # 
 # Content:
-# 1. Variables/Constants:
-#    - S3_BUCKET_NAME: The name of the S3 bucket where files are stored.
-#    - AWS_ACCESS_KEY_ID: AWS access key ID used for authentication.
-#    - AWS_SECRET_ACCESS_KEY: AWS secret access key for authentication.
-#    - S3_ENDPOINT_URL: The endpoint URL for connecting to S3.
-#    - AWS_CONN_ID: The connection ID for AWS (used by Airflow).
-#
-# 2. Functions:
+# Functions:
 #    - get_s3_client(): Initializes and returns an S3 client for interacting with AWS S3.
 #    - download_parquet_from_s3(): Downloads a Parquet file from S3 and loads it into a Pandas DataFrame.
 #    - upload_dataframe_to_s3_as_parquet(): Uploads a Pandas DataFrame as a Parquet file to S3.
@@ -21,8 +14,6 @@
 
 # Boto3 library to interact with AWS S3
 import boto3
-
-# Exceptions related to AWS operations for better error handling
 from botocore.exceptions import ClientError, PartialCredentialsError
 
 # S3Hook from Airflow to interface with AWS S3 storage in workflows

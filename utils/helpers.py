@@ -1,23 +1,7 @@
-# Python file: data_utility_functions.py
+# Python file: utils/helpers.py
 #
 # Content:
-# 1. Imports:
-#    - Standard libraries for system interaction, random data generation, date handling, and type hinting.
-#      * sys: For system-specific parameters and functions.
-#      * random: For random number generation.
-#      * datetime: For date and time manipulation.
-#      * typing: For type hints (Optional, Dict, Any).
-#    - Third-party libraries for data manipulation, system monitoring, and file handling.
-#      * pandas (pd): Data manipulation and analysis.
-#      * psutil: For system memory and CPU statistics.
-#      * humanize: For human-readable memory size conversion.
-#      * json: For reading and writing JSON data.
-#      * os: For interacting with the operating system.
-#      * numpy (np): For numerical operations.
-#    - Configuration imports for column handling and target names.
-#      * utils.config: For loading date columns and target names (in Russian and English) and mean income handling.
-#
-# 2. Functions:
+# Functions:
 #    - interpret_predictions(predictions: np.ndarray, lang: str, is_integer: bool) -> Dict[str, float]: 
 #      Maps numeric predictions to target names in the specified language ('rus' or 'eng').
 #    - load_row_from_json(json_data: Dict[str, Any]) -> pd.DataFrame:

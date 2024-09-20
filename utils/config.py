@@ -1,31 +1,26 @@
-# Python file: environment_and_data_setup.py
+# Python file: utils/config.py
 #
 # Content:
-# 1. Imports:
-#    - dotenv: For loading environment variables from a `.env` file.
-#    - os: For interacting with the operating system, particularly for accessing environment variables.
-#    - json: For reading and writing JSON files.
-#    - typing: Provides type hints for functions (Dict, Tuple, Union).
 #
-# 2. Constants:
-#    - S3_BUCKET_NAME: S3 bucket name for storage (loaded from environment variables).
-#    - AWS_ACCESS_KEY_ID: AWS access key for S3 operations (optional, loaded from environment variables).
-#    - AWS_SECRET_ACCESS_KEY: AWS secret access key for S3 (optional, loaded from environment variables).
-#    - S3_ENDPOINT_URL: Custom endpoint URL for S3 (optional, loaded from environment variables).
-#    - STATSD_UDP_PORT: Port for StatsD monitoring (optional, loaded from environment variables).
-#    - AWS_CONN_ID: AWS connection ID for specific integrations (optional, loaded from environment variables).
+# Constants:
+#    - S3_BUCKET_NAME: S3 bucket name for storage.
+#    - AWS_ACCESS_KEY_ID: AWS access key for S3 operations.
+#    - AWS_SECRET_ACCESS_KEY: AWS secret access key for S3.
+#    - S3_ENDPOINT_URL: Custom endpoint URL for S3.
+#    - STATSD_UDP_PORT: Port for StatsD monitoring.
+#    - AWS_CONN_ID: AWS connection ID for specific integrations.
 #
-# 3. Date Constants:
+# Date Constants:
 #    - TRAIN_TEST_SPLIT_DATE: Specifies the date to split training and testing data.
 #    - START_TRAIN_DATE: Specifies the start date for the training dataset.
 #
-# 4. Directory Paths:
+# Directory Paths:
 #    - DATA_DIR: Path to the directory where raw data is stored.
 #    - MODEL_DIR: Path to the directory where models are saved.
 #    - TMP_DIR: Path to the directory for temporary files.
 #    - S3_DIR: Path to the directory in S3 for data storage.
 #
-# 5. File Names:
+# File Names:
 #    - DATA_ZIP: Name of the ZIP file containing the raw data.
 #    - DATA_CSV: Name of the CSV file containing the raw data.
 #    - DATA_PARQUET: Name of the Parquet file for data processing.
@@ -36,27 +31,27 @@
 #    - MODEL_PARAMS: Name of the JSON file where model parameters are stored.
 #    - SAMPLE_JSON: Name of the sample JSON file.
 #
-# 6. Functions:
+# Functions:
 #    - path(base: str, *parts: str) -> str: Joins a base path with additional parts to create a full file path.
 #
-# 7. Model Parameters:
+# Model Parameters:
 #    - target_names: List of target variable names in Russian.
 #    - target_names_eng: List of target variable names in English.
 #    - income_mean: Mean income value, used for handling missing income data.
 #
-# 8. Data Type Specifications:
-#    - dtype_spec: Specifies the expected data types for certain columns, like 'age', 'tenure_months', etc.
+# Data Type Specifications:
+#    - dtype_spec: Specifies the expected data types for certain columns for parsing csv.
 #
-# 9. Column Definitions:
+# Column Definitions:
 #    - date_columns: List of columns that represent date values.
 #    - numerical_columns: List of columns containing numerical values.
 #    - freq_encode_columns: List of columns to be frequency-encoded.
 #    - one_hot_columns: List of columns for one-hot encoding.
 #
-# 10. Column Mappings:
+# Column Mappings:
 #    - new_columns: Mapping of old column names to new, standardized names for consistency in the dataset.
 #
-# 11. Column Attributes:
+# Column Attributes:
 #    - attrs: Describes attributes and the meaning of each column, including user demographic data, product features, and income data.
 
 
@@ -74,10 +69,9 @@ AWS_ACCESS_KEY_ID: Union[str, None] = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY: Union[str, None] = os.getenv('AWS_SECRET_ACCESS_KEY')
 S3_ENDPOINT_URL: Union[str, None] = os.getenv('S3_ENDPOINT_URL')
 
-# Load StatsD and AWS connection information
+# Load connection information
 STATSD_UDP_PORT: Union[str, None] = os.getenv('STATSD_UDP_PORT')
 AWS_CONN_ID: Union[str, None] = os.getenv('AWS_CONN_ID')
-
 TRACKING_SERVER_CONN = os.getenv('TRACKING_SERVER_CONN')
 
 # Define date constants
@@ -102,7 +96,7 @@ FITTED_MODEL: str = 'fitted_model.pkl'
 MODEL_PARAMS: str = 'model_params.json'
 SAMPLE_JSON: str = 'sample.json'
 
-LUCKY_USER = 376088
+LUCKY_USER = 376088 # Sample user for predictions testing
 
 RANDOM_STATE = 42  # Random state for reproducibility
 NAN_THRESHOLD = 10  # Threshold for NaN values to drop rows
@@ -144,7 +138,7 @@ else:
     target_names_eng = []
     income_mean = 0.0
 
-# Specify the data types for certain columns
+# Specify the data types for certain columns for parsing csv
 dtype_spec: Dict[str, str] = {
     'age': 'str',
     'tenure_months': 'str',
