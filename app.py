@@ -41,6 +41,20 @@ from utils.config import (
 )
 
 
+# Initialize global variables
+service_start = time.time()  # Service start time (for uptime tracking)
+last_time = time.time()  # Last time metrics were updated
+
+# Load the pre-trained model from file
+model = joblib.load(path(MODEL_DIR, FITTED_MODEL))
+
+# Initialize FastAPI app
+app = FastAPI(title="Bank RS")
+
+# Initialize StatsD client for sending metrics
+stats_client = StatsClient(host="graphite", port=STATSD_UDP_PORT, prefix="bank-rs")
+
+
 def refresh_metrics(st: StatsClient) -> None:
     """
     Update and send system metrics (CPU, memory usage, uptime) and request counts to StatsD.
@@ -64,20 +78,6 @@ def refresh_metrics(st: StatsClient) -> None:
     # Send uptime metric (time since service started)
     st.gauge('bank-rs.system.up_time', time.time() - service_start)
     st.incr("response_code.200")  # Increment response code 200 metric
-
-
-# Initialize global variables
-service_start = time.time()  # Service start time (for uptime tracking)
-last_time = time.time()  # Last time metrics were updated
-
-# Load the pre-trained model from file
-model = joblib.load(path(MODEL_DIR, FITTED_MODEL))
-
-# Initialize FastAPI app
-app = FastAPI(title="Bank RS")
-
-# Initialize StatsD client for sending metrics
-stats_client = StatsClient(host="graphite", port=STATSD_UDP_PORT, prefix="bank-rs")
 
 
 @app.get("/")
