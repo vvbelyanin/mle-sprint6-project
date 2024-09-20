@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy application files and the model
 COPY app.py /app.py
-COPY data_utils.py /data_utils.py
+COPY utils /utils
 COPY models /models
 
 # Expose the port

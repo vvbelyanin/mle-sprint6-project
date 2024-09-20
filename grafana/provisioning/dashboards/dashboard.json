@@ -1,882 +1,890 @@
 {
-    "annotations": {
-      "list": [
-        {
-          "builtIn": 1,
-          "datasource": {
-            "type": "grafana",
-            "uid": "-- Grafana --"
-          },
-          "enable": true,
-          "hide": true,
-          "iconColor": "rgba(0, 211, 255, 1)",
-          "name": "Annotations & Alerts",
-          "type": "dashboard"
-        }
-      ]
-    },
-    "editable": true,
-    "fiscalYearStartMonth": 0,
-    "graphTooltip": 0,
-    "links": [],
-    "panels": [
+  "annotations": {
+    "list": [
       {
+        "builtIn": 1,
         "datasource": {
-          "default": true,
-          "type": "graphite",
-          "uid": "my_graphite_datasource_uid"
+          "type": "grafana",
+          "uid": "-- Grafana --"
         },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "decimals": 0,
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            }
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Savings_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Сберегательный счёт"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Credit_Card.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Кредитная карта"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Savings_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Сберегательный счёт"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Bank_Guarantee.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Банковская гарантия"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Checking_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Текущие счета"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Derivatives_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Деривативный счёт"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Payroll_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Зарплатный проект"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Junior_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Детский счёт"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Special_Account_3.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Особый счёт 3"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Operations_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Особый счёт"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Special_Account_2.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Особый счёт 2"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Short-Term_Deposit.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Краткосрочный депозит"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Medium-Term_Deposit.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Среднесрочный депозит"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Long-Term_Deposit.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Долгосрочный депозит"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Digital_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Цифровой счёт"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Cash_Funds.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Денежный средства"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Mortgage.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Ипотека"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Pension_Plan.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Пенсионный план"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Loans.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Кредит"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Tax_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Налоговый счёт"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Credit_Card.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Кредитная карта"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Securities.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Ценные бумаги"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Home_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Домашний счёт"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Salary_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Аккаунт для выплаты зарплаты"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Pension_Obligation_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Аккаунт для пенсионных обязательств"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".*Debit_Account.*"
-              },
-              "properties": [
-                {
-                  "id": "displayName",
-                  "value": "Дебетовый аккаунт"
-                }
-              ]
-            }
-          ]
-        },
-        "gridPos": {
-          "h": 21,
-          "w": 14,
-          "x": 0,
-          "y": 0
-        },
-        "id": 5,
-        "options": {
-          "displayMode": "gradient",
-          "maxVizHeight": 300,
-          "minVizHeight": 16,
-          "minVizWidth": 8,
-          "namePlacement": "auto",
-          "orientation": "horizontal",
-          "reduceOptions": {
-            "calcs": [
-              "sum"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showUnfilled": true,
-          "sizing": "auto",
-          "valueMode": "color"
-        },
-        "pluginVersion": "11.2.0",
-        "targets": [
-          {
-            "datasource": {
-              "type": "graphite",
-              "uid": "my_graphite_datasource_uid"
-            },
-            "refCount": 0,
-            "refId": "A",
-            "target": "summarize(stats.bank-rs.target.*, '15min', 'sum')"
-          }
-        ],
-        "title": "Количество предсказаний продуктов",
-        "type": "bargauge"
-      },
-      {
-        "datasource": {
-          "default": true,
-          "type": "graphite",
-          "uid": "my_graphite_datasource_uid"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
-              "drawStyle": "line",
-              "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
-              "lineWidth": 3,
-              "pointSize": 8,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "auto",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "purple",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "s"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 6,
-          "w": 8,
-          "x": 14,
-          "y": 0
-        },
-        "id": 6,
-        "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": false
-          },
-          "tooltip": {
-            "mode": "single",
-            "sort": "none"
-          }
-        },
-        "targets": [
-          {
-            "datasource": {
-              "type": "graphite",
-              "uid": "my_graphite_datasource_uid"
-            },
-            "refCount": 0,
-            "refId": "A",
-            "target": "stats.timers.bank-rs.response_time.mean_90"
-          }
-        ],
-        "title": "Время отклика",
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "default": true,
-          "type": "graphite",
-          "uid": "my_graphite_datasource_uid"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "fixedColor": "purple",
-              "mode": "fixed"
-            },
-            "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
-              "drawStyle": "line",
-              "fillOpacity": 6,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
-              "lineStyle": {
-                "fill": "solid"
-              },
-              "lineWidth": 1,
-              "pointSize": 7,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "auto",
-              "spanNulls": true,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "line"
-              }
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "purple",
-                  "value": null
-                }
-              ]
-            }
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 7,
-          "w": 8,
-          "x": 14,
-          "y": 6
-        },
-        "id": 7,
-        "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": false
-          },
-          "tooltip": {
-            "mode": "single",
-            "sort": "none"
-          }
-        },
-        "targets": [
-          {
-            "datasource": {
-              "type": "graphite",
-              "uid": "my_graphite_datasource_uid"
-            },
-            "refCount": 0,
-            "refId": "A",
-            "target": "movingAverage(stats.bank-rs.response_code.200, '10min')"
-          }
-        ],
-        "title": "Динамика успешных (200) запросов",
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "default": true,
-          "type": "graphite",
-          "uid": "my_graphite_datasource_uid"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "max": 1,
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "#EAB839",
-                  "value": 0.8
-                },
-                {
-                  "color": "red",
-                  "value": 0.9
-                }
-              ]
-            },
-            "unit": "percentunit"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 4,
-          "w": 4,
-          "x": 14,
-          "y": 13
-        },
-        "id": 8,
-        "options": {
-          "minVizHeight": 75,
-          "minVizWidth": 75,
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": [
-              "mean"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showThresholdLabels": false,
-          "showThresholdMarkers": true,
-          "sizing": "auto"
-        },
-        "pluginVersion": "11.2.0",
-        "targets": [
-          {
-            "datasource": {
-              "type": "graphite",
-              "uid": "my_graphite_datasource_uid"
-            },
-            "refCount": 0,
-            "refId": "A",
-            "target": "stats.gauges.bank-rs.bank-rs.system.cpu_load"
-          }
-        ],
-        "title": "Загрузка CPU",
-        "type": "gauge"
-      },
-      {
-        "datasource": {
-          "default": true,
-          "type": "graphite",
-          "uid": "my_graphite_datasource_uid"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "fieldMinMax": true,
-            "mappings": [],
-            "max": 33000,
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "red",
-                  "value": null
-                },
-                {
-                  "color": "green",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "decmbytes"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 4,
-          "w": 4,
-          "x": 18,
-          "y": 13
-        },
-        "id": 9,
-        "options": {
-          "minVizHeight": 75,
-          "minVizWidth": 75,
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showThresholdLabels": false,
-          "showThresholdMarkers": true,
-          "sizing": "auto"
-        },
-        "pluginVersion": "11.2.0",
-        "targets": [
-          {
-            "datasource": {
-              "type": "graphite",
-              "uid": "my_graphite_datasource_uid"
-            },
-            "refCount": 0,
-            "refId": "A",
-            "target": "stats.gauges.bank-rs.bank-rs.system.memory_free_mb"
-          }
-        ],
-        "title": "Свободная память",
-        "type": "gauge"
-      },
-      {
-        "datasource": {
-          "default": true,
-          "type": "graphite",
-          "uid": "my_graphite_datasource_uid"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "orange",
-                  "value": null
-                }
-              ]
-            }
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 4,
-          "w": 4,
-          "x": 14,
-          "y": 17
-        },
-        "id": 11,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
-              "sum"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showPercentChange": false,
-          "textMode": "auto",
-          "wideLayout": true
-        },
-        "pluginVersion": "11.2.0",
-        "targets": [
-          {
-            "datasource": {
-              "type": "graphite",
-              "uid": "my_graphite_datasource_uid"
-            },
-            "refCount": 0,
-            "refId": "A",
-            "target": "stats.bank-rs.bank-rs.requests"
-          }
-        ],
-        "title": "Запросов за период",
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "default": true,
-          "type": "graphite",
-          "uid": "my_graphite_datasource_uid"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "yellow",
-                  "value": null
-                }
-              ]
-            },
-            "unit": "dthms"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 4,
-          "w": 4,
-          "x": 18,
-          "y": 17
-        },
-        "id": 10,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "none",
-          "justifyMode": "auto",
-          "orientation": "horizontal",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showPercentChange": false,
-          "text": {
-            "valueSize": 35
-          },
-          "textMode": "auto",
-          "wideLayout": true
-        },
-        "pluginVersion": "11.2.0",
-        "targets": [
-          {
-            "datasource": {
-              "type": "graphite",
-              "uid": "my_graphite_datasource_uid"
-            },
-            "refCount": 0,
-            "refId": "A",
-            "target": "stats.gauges.bank-rs.bank-rs.system.up_time"
-          }
-        ],
-        "title": "Время работы",
-        "type": "stat"
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
       }
-    ],
-    "refresh": "5s",
-    "schemaVersion": 39,
-    "tags": [],
-    "templating": {
-      "list": []
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "default": true,
+        "type": "graphite",
+        "uid": "my_graphite_datasource_uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Savings_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Сберегательный счёт"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Credit_Card.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Кредитная карта"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Savings_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Сберегательный счёт"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Bank_Guarantee.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Банковская гарантия"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Checking_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Текущие счета"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Derivatives_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Деривативный счёт"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Payroll_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Зарплатный проект"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Junior_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Детский счёт"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Special_Account_3.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Особый счёт 3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Operations_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Особый счёт"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Special_Account_2.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Особый счёт 2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Short-Term_Deposit.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Краткосрочный депозит"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Medium-Term_Deposit.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Среднесрочный депозит"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Long-Term_Deposit.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Долгосрочный депозит"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Digital_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Цифровой счёт"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Cash_Funds.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Денежный средства"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Mortgage.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Ипотека"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Pension_Plan.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Пенсионный план"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Loans.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Кредит"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Tax_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Налоговый счёт"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Credit_Card.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Кредитная карта"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Securities.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Ценные бумаги"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Home_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Домашний счёт"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Salary_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Аккаунт для выплаты зарплаты"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Pension_Obligation_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Аккаунт для пенсионных обязательств"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Debit_Account.*"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Дебетовый аккаунт"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 21,
+        "w": 14,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "my_graphite_datasource_uid"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "summarize(stats.bank-rs.target.*, '15min', 'sum')"
+        }
+      ],
+      "title": "Количество предсказаний продуктов",
+      "type": "bargauge"
     },
-    "time": {
-      "from": "now-15m",
-      "to": "now"
+    {
+      "datasource": {
+        "default": true,
+        "type": "graphite",
+        "uid": "my_graphite_datasource_uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 3,
+            "pointSize": 8,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 14,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "my_graphite_datasource_uid"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "stats.timers.bank-rs.response_time.mean_90"
+        }
+      ],
+      "title": "Время отклика",
+      "type": "timeseries"
     },
-    "timepicker": {},
-    "timezone": "browser",
-    "title": "bank-rs",
-    "uid": "cdxolwykmxurke",
-    "version": 4,
-    "weekStart": ""
-  }
+    {
+      "datasource": {
+        "default": true,
+        "type": "graphite",
+        "uid": "my_graphite_datasource_uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "purple",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 6,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 7,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 14,
+        "y": 6
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "my_graphite_datasource_uid"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "movingAverage(stats.bank-rs.response_code.200, '10min')"
+        }
+      ],
+      "title": "Динамика успешных (200) запросов",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "graphite",
+        "uid": "my_graphite_datasource_uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.8
+              },
+              {
+                "color": "red",
+                "value": 0.9
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 13
+      },
+      "id": 8,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "my_graphite_datasource_uid"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "stats.gauges.bank-rs.bank-rs.system.cpu_load"
+        }
+      ],
+      "title": "Загрузка CPU",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "graphite",
+        "uid": "my_graphite_datasource_uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "max": 33000,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 10
+              },
+              {
+                "color": "#EAB839",
+                "value": 20
+              },
+              {
+                "color": "green",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "decmbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 18,
+        "y": 13
+      },
+      "id": 9,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "my_graphite_datasource_uid"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "stats.gauges.bank-rs.bank-rs.system.memory_free_mb"
+        }
+      ],
+      "title": "Свободная память",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "graphite",
+        "uid": "my_graphite_datasource_uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 17
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "my_graphite_datasource_uid"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "stats.bank-rs.bank-rs.requests"
+        }
+      ],
+      "title": "Запросов за период",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "graphite",
+        "uid": "my_graphite_datasource_uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": null
+              }
+            ]
+          },
+          "unit": "dthms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 18,
+        "y": 17
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 35
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "my_graphite_datasource_uid"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "stats.gauges.bank-rs.bank-rs.system.up_time"
+        }
+      ],
+      "title": "Время работы",
+      "type": "stat"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "bank-rs",
+  "uid": "cdxolwykmxurke",
+  "version": 1,
+  "weekStart": ""
+}

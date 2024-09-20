@@ -1,56 +1,78 @@
+# docker-compose.yaml
+#
+# This Docker Compose file configures services for a full ML platform:
+# - FastAPI for the web service
+# - MLflow for tracking machine learning experiments
+# - Grafana for monitoring and visualization
+# - Graphite for metrics collection
+# - Airflow for managing workflows
+# Each service has dependencies to ensure the correct startup order.
+
 services:
   fastapi:
-    build: .  # Build FastAPI service from the current directory (Dockerfile required)
+    build: .  # Build FastAPI service from the current directory
     container_name: fastapi_app  # Name of the FastAPI container
     ports:
-      - "8000:8000"  # Expose FastAPI on port 8000 (host:container)
-    depends_on:  # FastAPI depends on mlflow and graphite to start first
+      - "${FASTAPI_PORT}:${FASTAPI_PORT}"  # Expose FastAPI on port specified by environment variable (host:container)
+    depends_on:  # FastAPI depends on MLflow and Graphite to be ready first
       - mlflow
       - graphite
     env_file:
-      - .env
+      - .env  # Load environment variables from the .env file
 
   mlflow:
-    build: .  # Build MLflow service from the current directory (using Dockerfile for FastAPI)
+    build: .  # Build MLflow service from the current directory (using the Dockerfile for FastAPI)
+    container_name: mlflow  # Name of the MLflow container
+    env_file: 
+      - .env  # Load environment variables from the .env file
     command:
       - mlflow
       - server
-      - --backend-store-uri=postgresql://${DB_DESTINATION_USER}:${DB_DESTINATION_PASSWORD}@${DB_DESTINATION_HOST}:${DB_DESTINATION_PORT}/${DB_DESTINATION_NAME}
-      - --registry-store-uri=postgresql://${DB_DESTINATION_USER}:${DB_DESTINATION_PASSWORD}@${DB_DESTINATION_HOST}:${DB_DESTINATION_PORT}/${DB_DESTINATION_NAME}
-      - --default-artifact-root=s3://${S3_BUCKET_NAME}
-      - --host=0.0.0.0
-      - --no-serve-artifacts
+      - --backend-store-uri=postgresql://${DB_DESTINATION_USER}:${DB_DESTINATION_PASSWORD}@${DB_DESTINATION_HOST}:${DB_DESTINATION_PORT}/${DB_DESTINATION_NAME}  # MLflow backend store URI (PostgreSQL)
+      - --registry-store-uri=postgresql://${DB_DESTINATION_USER}:${DB_DESTINATION_PASSWORD}@${DB_DESTINATION_HOST}:${DB_DESTINATION_PORT}/${DB_DESTINATION_NAME}  # Registry store URI (PostgreSQL)
+      - --default-artifact-root=s3://${S3_BUCKET_NAME}  # Root location for MLflow artifacts (S3 bucket)
+      - --host=0.0.0.0  # Bind MLflow server to all network interfaces
+      - --no-serve-artifacts  # Artifacts are stored in S3; MLflow won't serve them
     ports:
-      - "5000:5000"  # Expose MLflow server on port 5000 (host:container)
-    environment:
-      - DB_DESTINATION_USER=${DB_DESTINATION_USER}  # Database user from .env
-      - DB_DESTINATION_PASSWORD=${DB_DESTINATION_PASSWORD}  # Database password from .env
-      - DB_DESTINATION_HOST=${DB_DESTINATION_HOST}  # Database host from .env
-      - DB_DESTINATION_PORT=${DB_DESTINATION_PORT}  # Database port from .env
-      - DB_DESTINATION_NAME=${DB_DESTINATION_NAME}  # Database name from .env
-    depends_on:  # MLflow service requires Graphite to start first
+      - "${MLFLOW_PORT}:${MLFLOW_PORT}"  # Expose MLflow server on port specified by environment variable (host:container)
+    depends_on:  # MLflow service depends on Graphite to be running first
       - graphite
     volumes:
-      - ./mlruns:/mlflow/artifacts  # Mount local directory to store MLflow artifacts
+      - ./mlruns:/mlflow/artifacts  # Mount the local directory for storing MLflow artifacts
 
   grafana:
     image: grafana/grafana  # Use the official Grafana image
     container_name: grafana  # Name of the Grafana container
     ports:
-      - "3000:3000"  # Expose Grafana on port 3000 (host:container)
+      - "${GRAFANA_PORT}:${GRAFANA_PORT}"  # Expose Grafana on port specified by environment variable (host:container)
     environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER} # Grafana admin username
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASS} # Grafana admin password
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}  # Grafana admin username from environment
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASS}  # Grafana admin password from environment
     volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning  # Mount provisioning files for Grafana
-    depends_on:  # Grafana requires Graphite to start first
+      - ./grafana/provisioning:/etc/grafana/provisioning  # Mount the provisioning files for Grafana to configure it
+    depends_on:  # Grafana depends on Graphite to collect metrics
       - graphite
 
   graphite:
     image: graphiteapp/graphite-statsd  # Use the official Graphite image with StatsD
     container_name: graphite  # Name of the Graphite container
     ports:
-      - "80:80"               # Expose Graphite web interface on port 80 (host:container)
-      - "2003:2003"            # Expose Carbon port (used for receiving metrics) on port 2003
-      - "8125:8125/udp"        # Expose StatsD UDP port on 8125 (for receiving metrics)
-      - "8126:8126"            # Expose StatsD admin interface on port 8126 (host:container)
+      - "${GRAPHITE_WEB_PORT}:${GRAPHITE_WEB_PORT}"  # Expose Graphite's web interface on the port specified by environment variable (host:container)
+      - "${CARBON_PORT}:${CARBON_PORT}"  # Carbon port for Graphite metrics
+      - "${STATSD_UDP_PORT}:${STATSD_UDP_PORT}/udp"  # StatsD UDP port for sending metrics (host:container)
+      - "${STATSD_ADMIN_PORT}:${STATSD_ADMIN_PORT}"  # StatsD admin interface (host:container)
+
+  airflow:
+    container_name: airflow  # Name of the Airflow container
+    env_file: 
+      - .env  # Load environment variables from the .env file
+    build:
+      context: .  # Set the build context to the root directory
+      dockerfile: airflow/Dockerfile  # Use the Dockerfile located in the airflow directory
+    ports:
+      - "${AIRFLOW_PORT}:${AIRFLOW_PORT}"  # Expose Airflow's web interface on the port specified by environment variable (host:container)
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}  # AWS access key for Airflow
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}  # AWS secret key for Airflow
+      - AWS_REGION=${AWS_REGION}  # AWS region for the S3 service
+      - S3_ENDPOINT_URL=${S3_ENDPOINT_URL}  # Custom S3 endpoint URL (if using a service like Yandex Cloud)

@@ -1,3 +1,41 @@
+# Python file: bank_rs_api.py
+#
+# Content:
+# 1. Imports:
+#    - Standard libraries for file handling, environment variables, time tracking, and array operations.
+#      * os: For environment variable access.
+#      * json: For parsing JSON data.
+#      * time: For time-related operations (tracking and delays).
+#      * numpy: For numerical array operations.
+#    - Third-party libraries for serving the API, model loading, and system monitoring.
+#      * uvicorn: ASGI server for running FastAPI.
+#      * joblib: For loading pre-trained machine learning models.
+#      * psutil: For accessing system utilization metrics (CPU, memory).
+#      * pandas: For data manipulation.
+#      * fastapi: For building the FastAPI app.
+#      * dotenv: For loading environment variables from a .env file.
+#      * typing: For type hinting.
+#      * statsd: For sending metrics to StatsD.
+#    - Local project imports for utility functions and configuration.
+#      * utils.helpers: Helper functions (gen_random_data, load_row_from_json, interpret_predictions).
+#      * utils.config: Constants like MODEL_DIR, FITTED_MODEL, STATSD_UDP_PORT.
+#
+# 2. Constants:
+#    - REFRESH_PERIOD: Interval for refreshing system metrics.
+#    - PROBA_THRESHOLD: Probability threshold for filtering predictions.
+#
+# 3. Functions:
+#    - refresh_metrics(st: StatsClient) -> None: Sends system metrics (CPU, memory) and request metrics to StatsD.
+#
+# 4. FastAPI Endpoints:
+#    - read_root() -> dict: Root endpoint that returns the status of the service.
+#    - get_random() -> dict: Generates random data, makes predictions, and sends metrics to StatsD.
+#    - predict(data: Dict = Body(...)) -> dict: Accepts user input data for predictions and sends metrics.
+#    - predict_proba(data: Dict = Body(...)) -> dict: Returns sorted predictions with probabilities above a threshold.
+#
+# This file defines a FastAPI application with endpoints for generating predictions using a pre-trained model.
+# It also includes system metric tracking via StatsD, and sends metrics related to CPU usage, memory, and API response times.
+
 # Standard library imports
 import os  # For environment variables
 import json  # For parsing JSON files
@@ -15,77 +53,17 @@ from typing import Dict  # Type hinting for dictionaries
 from statsd import StatsClient  # For sending metrics to StatsD
 
 # Local project imports
-from data_utils import (get_mem_usage, new_columns, attrs, DataFrameProcessor, 
-                        frequency_encoding, get_X_y, gen_random_data)  # Custom utilities for data processing
-
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Retrieve environment variables
-DATA_DIR = os.getenv('DATA_DIR')
-MODEL_DIR = os.getenv('MODEL_DIR')
-FITTED_MODEL = os.getenv('FITTED_MODEL')
-MODEL_PARAMS = os.getenv('MODEL_PARAMS')
-
-
-def load_row_from_json(json_data: Dict) -> pd.DataFrame:
-    """
-    Convert JSON data to a Pandas Series, handle date parsing, and return as a DataFrame.
-    
-    Args:
-        json_data (Dict): JSON data received from the request.
-    
-    Returns:
-        pd.DataFrame: DataFrame with a single row of parsed data.
-    """
-    row_loaded = pd.Series(json_data)
-
-    # Parse date columns, ensuring consistent formatting and handling invalid dates
-    row_loaded['fetch_date'] = pd.to_datetime(row_loaded['fetch_date'], format='%d-%m-%Y', errors='coerce')
-    row_loaded['registration_date'] = pd.to_datetime(row_loaded['registration_date'], format='%d-%m-%Y', errors='coerce')
-    row_loaded['last_date_as_primary'] = pd.to_datetime(row_loaded['last_date_as_primary'], format='%d-%m-%Y', errors='coerce')
-
-    # Handle missing income values by replacing them with the mean income
-    if pd.isna(row_loaded['income']):
-        row_loaded['income'] = income_mean
-
-    # Convert Series to DataFrame for model prediction compatibility
-    return pd.DataFrame([row_loaded])
-
-
-def interpret_predictions(predictions: np.ndarray, lang: str = 'rus', is_integer: bool = True) -> Dict[str, float]:
-    """
-    Map numeric predictions to target names in the specified language.
-    
-    Args:
-        predictions (np.ndarray): Array of prediction values.
-        lang (str): Language for target names, either 'rus' or 'eng'.
-        is_integer (bool): Flag indicating whether to convert predictions to integers.
-    
-    Returns:
-        Dict[str, float]: Dictionary mapping target names to their predicted values.
-    """
-    if lang == 'rus':
-        targets = target_names
-    else:
-        targets = target_names_eng
-    
-    # Construct a dictionary mapping target names to prediction values
-    res = {}
-    for col, name in zip(predictions, targets):
-        if is_integer:
-            res[name] = int(col)  # Convert to int if needed
-        else:
-            res[name] = float(col)  # Convert to float if needed
-
-    return res
+from utils.helpers import gen_random_data, load_row_from_json, interpret_predictions
+from utils.config import (
+    MODEL_DIR, FITTED_MODEL, STATSD_UDP_PORT, 
+    REFRESH_PERIOD, PROBA_THRESHOLD, path
+)
 
 
 def refresh_metrics(st: StatsClient) -> None:
     """
     Update and send system metrics (CPU, memory usage, uptime) and request counts to StatsD.
-    
+
     Args:
         st (StatsClient): StatsD client instance for sending metrics.
     """
@@ -95,8 +73,8 @@ def refresh_metrics(st: StatsClient) -> None:
     st.incr('bank-rs.requests')
     
     # If the time delta exceeds the threshold, update system performance metrics
-    if time.time() - last_time > time_delta:
-        cpu_load = psutil.cpu_percent(interval=1)  # CPU load over 1 second interval
+    if time.time() - last_time > REFRESH_PERIOD:
+        cpu_load = psutil.cpu_percent(interval=1) / 100  # CPU load over 1 second interval
         st.gauge('bank-rs.system.cpu_load', cpu_load)
         memory_info = psutil.virtual_memory().available / 1024 / 1024  # Available memory in MB
         st.gauge('bank-rs.system.memory_free_mb', memory_info)
@@ -110,30 +88,22 @@ def refresh_metrics(st: StatsClient) -> None:
 # Initialize global variables
 service_start = time.time()  # Service start time (for uptime tracking)
 last_time = time.time()  # Last time metrics were updated
-time_delta = 10  # Time interval (in seconds) for metric refresh
 
 # Load the pre-trained model from file
-model = joblib.load(MODEL_DIR + FITTED_MODEL)
-
-# Load model parameters (target names, income mean, etc.) from JSON file
-with open(MODEL_DIR + MODEL_PARAMS, 'r') as f:
-    json_data = json.load(f)
-    target_names = json_data['target_names']  # Russian target names
-    target_names_eng = json_data['target_names_eng']  # English target names
-    income_mean = json_data['income_mean']  # Mean income used for missing values
+model = joblib.load(path(MODEL_DIR, FITTED_MODEL))
 
 # Initialize FastAPI app
 app = FastAPI(title="Bank RS")
 
 # Initialize StatsD client for sending metrics
-stats_client = StatsClient(host="graphite", port=8125, prefix="bank-rs")
+stats_client = StatsClient(host="graphite", port=STATSD_UDP_PORT, prefix="bank-rs")
 
 
 @app.get("/")
 async def read_root() -> dict:
     """
     Root endpoint that returns the service status and refreshes system metrics.
-    
+
     Returns:
         dict: Status message.
     """
@@ -145,7 +115,7 @@ async def read_root() -> dict:
 async def get_random() -> dict:
     """
     Generate random data, make predictions, and send metrics to StatsD.
-    
+
     Returns:
         dict: Predicted values based on random data.
     """
@@ -176,10 +146,10 @@ async def get_random() -> dict:
 async def predict(data: Dict = Body(...)) -> dict:
     """
     Predict based on provided input data and send metrics to StatsD.
-    
+
     Args:
         data (Dict): Input data as JSON.
-    
+
     Returns:
         dict: Predicted values.
     """
@@ -210,19 +180,18 @@ async def predict(data: Dict = Body(...)) -> dict:
 async def predict_proba(data: Dict = Body(...)) -> dict:
     """
     Makes recommendations based on probabilities, does not generate metrics.
-    
+
     Args:
         data (Dict): Input data as JSON.
-    
+
     Returns:
         dict: Sorted predictions with probabilities above the threshold.
     """
     row = load_row_from_json(data)
     predictions = model.predict_proba(row)
 
-    threshold = 0.01
     interpreted_predictions = interpret_predictions([pos_class[1] for prediction in predictions for pos_class in prediction], is_integer=False)
-    filtered_dict = {k: round(v, 4) for k, v in interpreted_predictions.items() if v >= threshold}
+    filtered_dict = {k: round(v, 4) for k, v in interpreted_predictions.items() if v >= PROBA_THRESHOLD}
     sorted_dict = dict(sorted(filtered_dict.items(), key=lambda item: -item[1]))
 
     return sorted_dict
