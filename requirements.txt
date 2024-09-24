@@ -7,7 +7,7 @@ pandas==2.2.2
 phik==0.12.4
 psutil==6.0.0
 scikit_learn==1.5.1
-scipy==1.14.1
+scipy==1.11.1
 seaborn==0.13.2
 threadpoolctl==3.5.0
 python-dotenv==1.0.1
